@@ -5,6 +5,7 @@ import Default from "@/layouts/Default.vue";
 import Blank from "@/layouts/Blank.vue";
 import MainPage from "@/pages/MainPage.vue";
 import AuthPage from "@/pages/AuthPage.vue";
+import ProfilePage from "@/pages/ProfilePage.vue";
 
 import { auth } from "@/plugins/firebase";
 
@@ -21,6 +22,12 @@ const router = new VueRouter({
           path: "",
           name: "main",
           component: MainPage,
+          meta: { requiresAuth: true },
+        },
+        {
+          path: "profile",
+          name: "profile",
+          component: ProfilePage,
           meta: { requiresAuth: true },
         },
       ],

@@ -1,8 +1,8 @@
 <template>
   <!-- eslint-disable-next-line vue/max-attributes-per-line -->
   <div id="container" class="container-fluid">
-    <div id="title" class="mt-3">
-      <h2>{{ title }}</h2>
+    <div id="title" class="text-center mt-3">
+      <h3>{{ title }}</h3>
     </div>
     <section id="flexSection" class="d-flex justify-content-evenly mt-5">
       <div id="leftPart" class="item">
@@ -39,13 +39,12 @@ export default {
 #container {
   width: 100%;
 }
-#title h2 {
-  text-align: center;
-}
+
 #leftPart {
   width: 52em;
   max-width: 52em;
 }
+
 #rightPart {
   width: 52em;
   max-width: 52em;

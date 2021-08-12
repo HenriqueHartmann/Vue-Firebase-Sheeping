@@ -1,27 +1,20 @@
 <template>
   <div>
     <div>
-      <nav class="navbar fixed-top navbar-light bg-light">
+      <nav id="menu" class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-          <span class="navbar-brand" @click="sendTo">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="40"
-              height="40"
-              fill="currentColor"
-              class="bi bi-rainbow"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M8 4.5a7 7 0 0 0-7 7 .5.5 0 0 1-1 0 8 8 0 1 1 16 0 .5.5 0 0 1-1 0 7 7 0 0 0-7-7zm0 2a5 5 0 0 0-5 5 .5.5 0 0 1-1 0 6 6 0 1 1 12 0 .5.5 0 0 1-1 0 5 5 0 0 0-5-5zm0 2a3 3 0 0 0-3 3 .5.5 0 0 1-1 0 4 4 0 1 1 8 0 .5.5 0 0 1-1 0 3 3 0 0 0-3-3zm0 2a1 1 0 0 0-1 1 .5.5 0 0 1-1 0 2 2 0 1 1 4 0 .5.5 0 0 1-1 0 1 1 0 0 0-1-1z"
-              />
-            </svg>
+          <span @click="sendTo('main')" class="navbar-brand mb-0 h1" id="brand">
             Sheeping
           </span>
-          <div>
-            <button @click="signOut" id="signOut" class="btn btn-primary">
-              Sair
-            </button>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item"><span @click="sendTo('main')" class="nav-link">Home</span></li>
+              <li class="nav-item"><span @click="sendTo('profile')" class="nav-link">Profile</span></li>
+              <li class="nav-item"><span @click="signOut" class="nav-link">Sair</span></li>
+            </ul>
           </div>
         </div>
       </nav>
@@ -37,9 +30,9 @@ export default {
   name: "Default",
   mixins: [FButils],
   methods: {
-    sendTo() {
-      if (this.$route.name != "main") {
-        this.$router.push({ name: "main" });
+    sendTo(route) {
+      if (this.$route.name != route) {
+        this.$router.push({ name: route });
       }
     },
   },
@@ -47,7 +40,12 @@ export default {
 </script>
 
 <style>
-#signOut {
-  width: 10em;
-}
+  #brand:hover {
+    cursor: pointer;
+    color:lightslategray;
+  }
+  
+  #navbarNav ul li:hover{
+    cursor: pointer;
+  }
 </style>
