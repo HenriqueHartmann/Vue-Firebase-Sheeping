@@ -6,7 +6,7 @@
               <input v-model="user.name" id="fName" class="form-control" type="text">
           </div>
           <div>
-              <button class="btn btn-success">Salvar</button>
+              <button @click.prevent="updateProfile" class="btn btn-success">Salvar</button>
           </div>
       </form>
   </div>

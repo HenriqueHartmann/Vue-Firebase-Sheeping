@@ -66,6 +66,11 @@ export default {
       this.user.id = profileData.id;
       this.user.name = profileData.data().name;
     },
+    async updateProfile() {
+      await fb.db.collection("profile").doc(this.user.id).update({
+        name: this.user.name,
+      });
+    },
     signOut() {
       fb.auth.signOut().then(() => {
         this.$router.push({ name: "auth" });
