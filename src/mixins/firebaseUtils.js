@@ -4,15 +4,30 @@ export default {
   data() {
     return {
       user: {
+        id: "",
         email: "",
         password: "",
+        name: "",
       },
       errorAuth: false,
       alreadyExists: false,
+      logged: false,
     };
   },
   methods: {
+    checkAuth() {      
+      fb.auth.onAuthStateChanged((user) => {
+        if (!user) {
+          this.$router.push({ name: "auth" });
+        } else {
+          this.logged = true;
+        }
+      });
+    },
     async authentication() {
+      if (fb.auth.currentUser) {
+        fb.auth.signOut();
+      }
       try {
         await fb.auth
           .signInWithEmailAndPassword(this.user.email, this.user.password)
@@ -21,22 +36,6 @@ export default {
           });
       } catch (error) {
         this.errorAuth = true;
-
-        /*const errorCode = error.code;
-        switch (errorCode) {
-          case "auth/wrong-password":
-            this.errorAuth = true;
-            break;
-          case "auth/invalid-email":
-            this.errorAuth = true;
-            break;
-          case "auth/user-not-found":
-            this.errorAuth = true;
-            break;
-          default:
-            this.errorAuth = true;
-            break;
-        }*/
       }
     },
     async createAccount() {
@@ -55,15 +54,22 @@ export default {
       await fb.db.collection("profile").add(profile);
     },
     async getProfile() {
+      let user = fb.auth.currentUser;
 
+      const profile = await fb
+      .db
+      .collection("profile")
+      .where("uid", "==", user.uid)
+      .get();
+
+      const profileData = profile.docs[0];
+      this.user.id = profileData.id;
+      this.user.name = profileData.data().name;
     },
     signOut() {
       fb.auth.signOut().then(() => {
         this.$router.push({ name: "auth" });
       });
     },
-    async getUser() {
-
-    }
   },
 };

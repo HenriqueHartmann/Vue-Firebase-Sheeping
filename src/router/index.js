@@ -7,12 +7,11 @@ import MainPage from "@/pages/MainPage.vue";
 import AuthPage from "@/pages/AuthPage.vue";
 import ProfilePage from "@/pages/ProfilePage.vue";
 
-import { auth } from "@/plugins/firebase";
-
 Vue.use(VueRouter);
 
 const router = new VueRouter({
   mode: "history",
+  base: "/",
   routes: [
     {
       path: "/",
@@ -44,16 +43,6 @@ const router = new VueRouter({
       ],
     },
   ],
-});
-
-router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some((x) => x.meta.requiresAuth);
-
-  if (requiresAuth && !auth.currentUser) {
-    next("/auth");
-  } else {
-    next();
-  }
 });
 
 export default router;
