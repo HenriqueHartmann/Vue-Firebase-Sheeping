@@ -43,12 +43,27 @@ export default {
       await fb.auth.createUserWithEmailAndPassword(
         this.user.email,
         this.user.password
-      );
+      ).then(() => {
+        const profile = {
+          name: this.user.name,
+          uid: fb.auth.currentUser.uid,
+        };
+        this.addProfile(profile);
+      });
+    },
+    async addProfile(profile) {
+      await fb.db.collection("profile").add(profile);
+    },
+    async getProfile() {
+
     },
     signOut() {
       fb.auth.signOut().then(() => {
         this.$router.push({ name: "auth" });
       });
     },
+    async getUser() {
+
+    }
   },
 };

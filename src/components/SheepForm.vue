@@ -43,7 +43,7 @@
 
 <script>
     export default {
-        name: 'SheepForm',
+        name: "SheepForm",
         props: {
             sheeps: Array
         },
