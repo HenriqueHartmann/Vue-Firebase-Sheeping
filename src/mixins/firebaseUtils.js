@@ -10,12 +10,16 @@ export default {
         name: "",
       },
       errorAuth: false,
-      alreadyExists: false,
+      alreadyExists: true,
       logged: false,
+      loadingAuth: false,
     };
   },
   methods: {
-    checkAuth() {      
+    changeState(value) {
+      this.$emit("changeState", value);
+    },
+    checkAuth() {
       fb.auth.onAuthStateChanged((user) => {
         if (!user) {
           this.$router.push({ name: "auth" });
@@ -28,6 +32,7 @@ export default {
       if (fb.auth.currentUser) {
         fb.auth.signOut();
       }
+      this.loadingAuth = true;
       try {
         await fb.auth
           .signInWithEmailAndPassword(this.user.email, this.user.password)
@@ -37,18 +42,27 @@ export default {
       } catch (error) {
         this.errorAuth = true;
       }
+      this.loadingAuth = false;
     },
     async createAccount() {
-      await fb.auth.createUserWithEmailAndPassword(
-        this.user.email,
-        this.user.password
-      ).then(() => {
-        const profile = {
-          name: this.user.name,
-          uid: fb.auth.currentUser.uid,
-        };
-        this.addProfile(profile);
-      });
+      if (fb.auth.currentUser) {
+        fb.auth.signOut();
+      }
+      try {
+        await fb.auth
+          .createUserWithEmailAndPassword(this.user.email, this.user.password)
+          .then(() => {
+            const profile = {
+              name: this.user.name,
+              uid: fb.auth.currentUser.uid,
+            };
+            this.addProfile(profile).then(() => {
+              this.changeState(true);
+            });
+          });
+      } catch (error) {
+        this.errorAuth = true;
+      }
     },
     async addProfile(profile) {
       await fb.db.collection("profile").add(profile);
@@ -56,20 +70,22 @@ export default {
     async getProfile() {
       let user = fb.auth.currentUser;
 
-      const profile = await fb
-      .db
-      .collection("profile")
-      .where("uid", "==", user.uid)
-      .get();
+      const profile = await fb.db
+        .collection("profile")
+        .where("uid", "==", user.uid)
+        .get();
 
       const profileData = profile.docs[0];
       this.user.id = profileData.id;
       this.user.name = profileData.data().name;
     },
     async updateProfile() {
-      await fb.db.collection("profile").doc(this.user.id).update({
-        name: this.user.name,
-      });
+      await fb.db
+        .collection("profile")
+        .doc(this.user.id)
+        .update({
+          name: this.user.name,
+        });
     },
     signOut() {
       fb.auth.signOut().then(() => {

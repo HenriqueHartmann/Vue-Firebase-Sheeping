@@ -22,12 +22,26 @@
       </div>
       <div class="d-flex justify-content-between">
         <div id="formButton">
-          <button @click.prevent="authentication" class="btn btn-success">
+          <button
+            v-if="!loadingAuth"
+            @click.prevent="authentication"
+            class="btn btn-success"
+          >
             Login
+          </button>
+          <button v-else class="btn btn-success" type="button" disabled>
+            <span
+              class="spinner-grow spinner-grow-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            Loading...
           </button>
         </div>
         <div>
-          <p id="changeTo" @click="changeTo">Não tem uma conta. Clique aqui!</p>
+          <p id="changeState" @click="changeState(false)">
+            Não tem uma conta. Clique aqui!
+          </p>
         </div>
       </div>
     </form>
@@ -39,7 +53,7 @@
     >
       <strong>Alguma coisa deu errado. Tente de novo!</strong>
       <button
-        @click.prevent="closeAlert"
+        @click.prevent="errorAuth = !errorAuth"
         type="button"
         class="btn-close"
         data-bs-dismiss="alert"
@@ -55,28 +69,15 @@ import FButils from "@/mixins/firebaseUtils.js";
 export default {
   name: "SignIn",
   mixins: [FButils],
-  data() {
-    return {
-      user: {
-        email: "",
-        password: "",
-      },
-      errorAuth: false,
-    };
-  },
-  methods: {
-    changeTo() {
-      this.$emit("changeType", false);
-    },
-    closeAlert() {
-      this.errorAuth = false;
-    },
-  },
 };
 </script>
 
 <style>
-#changeTo:hover {
+#form {
+  margin-bottom: 5em;
+}
+
+#changeState:hover {
   color: gray;
   cursor: pointer;
 }

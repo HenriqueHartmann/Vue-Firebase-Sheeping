@@ -14,25 +14,23 @@
         />
       </svg>
     </div>
-    <sign-in v-if="accountExists" @changeType="accountExists = $event" />
-    <sign-up v-else @changeType="accountExists = $event" />
+    <sign-in v-if="alreadyExists" @changeState="alreadyExists = false" />
+    <sign-up v-else @changeState="alreadyExists = true" />
   </div>
 </template>
 
 <script>
+import FButils from "@/mixins/firebaseUtils.js";
+
 import SignIn from "@/components/SignIn.vue";
 import SignUp from "@/components/SignUp.vue";
 
 export default {
   name: "Auth",
+  mixins: [FButils],
   components: {
     SignIn,
     SignUp,
-  },
-  data() {
-    return {
-      accountExists: true,
-    };
   },
 };
 </script>

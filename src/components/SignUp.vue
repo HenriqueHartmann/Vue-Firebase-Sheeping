@@ -31,15 +31,32 @@
       </div>
       <div class="d-flex justify-content-between">
         <div id="formButton">
-          <button @click.prevent="create" class="btn btn-success">Criar</button>
+          <button @click.prevent="createAccount" class="btn btn-success">
+            Criar
+          </button>
         </div>
         <div>
-          <p id="redirect" @click="changeTo">
+          <p id="changeState" @click="changeState(true)">
             Já possui uma conta. Clique aqui!
           </p>
         </div>
       </div>
     </form>
+    <div
+      v-if="errorAuth"
+      class="alert alert-danger alert-dismissible"
+      role="alert"
+      id="liveAlert"
+    >
+      <strong>Alguma coisa deu errado. Tente de novo!</strong>
+      <button
+        @click.prevent="errorAuth = !errorAuth"
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
   </div>
 </template>
 
@@ -49,31 +66,21 @@ import FButils from "@/mixins/firebaseUtils.js";
 export default {
   name: "SignUp",
   mixins: [FButils],
-  data() {
-    return {
-      user: {
-        name: "",
-        email: "",
-        password: "",
-      },
-    };
-  },
-  methods: {
-    changeTo() {
-      this.$emit("changeType", true);
-    },
-    create() {
-      this.createAccount().then(() => {
-        this.changeTo();
-      });
-    },
-  },
 };
 </script>
 
 <style>
-#redirect:hover {
+#form {
+  margin-bottom: 5em;
+}
+
+#changeState:hover {
   color: gray;
   cursor: pointer;
+}
+
+.alert {
+  margin-left: 10em;
+  margin-right: 10em;
 }
 </style>
