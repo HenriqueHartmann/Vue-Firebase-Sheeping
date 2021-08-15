@@ -31,8 +31,20 @@
       </div>
       <div class="d-flex justify-content-between">
         <div id="formButton">
-          <button @click.prevent="createAccount" class="btn btn-success">
+          <button
+            v-if="!loadingAuth"
+            @click.prevent="createAccount"
+            class="btn btn-success"
+          >
             Criar
+          </button>
+          <button v-else class="btn btn-success" type="button" disabled>
+            <span
+              class="spinner-grow spinner-grow-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            Loading...
           </button>
         </div>
         <div>
