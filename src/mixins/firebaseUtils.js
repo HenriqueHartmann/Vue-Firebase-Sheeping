@@ -11,7 +11,6 @@ export default {
       },
       errorAuth: false,
       alreadyExists: true,
-      logged: false,
       loadingAuth: false,
     };
   },
@@ -19,18 +18,10 @@ export default {
     changeState(value) {
       this.$emit("changeState", value);
     },
-    checkAuth() {
-      fb.auth.onAuthStateChanged((user) => {
-        if (!user) {
-          this.$router.push({ name: "auth" });
-        } else {
-          this.logged = true;
-        }
-      });
-    },
+
     async authentication() {
       if (fb.auth.currentUser) {
-        fb.auth.signOut();
+        this.signOut();
       }
       this.loadingAuth = true;
       try {
@@ -44,10 +35,12 @@ export default {
       }
       this.loadingAuth = false;
     },
+
     async createAccount() {
       if (fb.auth.currentUser) {
-        fb.auth.signOut();
+        this.signOut();
       }
+      this.loadingAuth = true;
       try {
         await fb.auth
           .createUserWithEmailAndPassword(this.user.email, this.user.password)
@@ -63,10 +56,13 @@ export default {
       } catch (error) {
         this.errorAuth = true;
       }
+      this.loadingAuth = false;
     },
+
     async addProfile(profile) {
       await fb.db.collection("profile").add(profile);
     },
+
     async getProfile() {
       let user = fb.auth.currentUser;
 
@@ -79,6 +75,7 @@ export default {
       this.user.id = profileData.id;
       this.user.name = profileData.data().name;
     },
+
     async updateProfile() {
       await fb.db
         .collection("profile")
@@ -87,10 +84,9 @@ export default {
           name: this.user.name,
         });
     },
+
     signOut() {
-      fb.auth.signOut().then(() => {
-        this.$router.push({ name: "auth" });
-      });
+      fb.auth.signOut();
     },
   },
 };
