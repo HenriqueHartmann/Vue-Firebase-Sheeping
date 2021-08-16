@@ -39,6 +39,9 @@ export default {
           });
       } catch (error) {
         this.errorAuth = true;
+        setTimeout(() => {
+          this.errorAuth = false;
+        }, 5000);
       }
       this.loadingAuth = false;
     },
@@ -62,6 +65,9 @@ export default {
           });
       } catch (error) {
         this.errorAuth = true;
+        setTimeout(() => {
+          this.errorAuth = false;
+        }, 5000);
       }
       this.loadingAuth = false;
     },

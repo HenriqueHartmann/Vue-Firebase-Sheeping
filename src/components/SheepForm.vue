@@ -66,6 +66,21 @@
         </button>
       </div>
     </form>
+    <div
+      v-if="errorSheep"
+      class="alert alert-danger alert-dismissible"
+      role="alert"
+      id="liveAlert"
+    >
+      <strong>{{ errorMessage }}</strong>
+      <button
+        @click.prevent="closeError()"
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
   </div>
 </template>
 
@@ -102,14 +117,25 @@ export default {
         "Mouro Malhado",
         "Castanho",
       ],
+      errorSheep: false,
+      errorMessage: "",
     };
   },
   methods: {
     createSheep() {
       if (this.sheep.number < 1 || this.sheep.number > 999) {
-        alert("O Número deve ser estar entre 0 e 1000. Tente de novo!!!");
+        this.errorSheep = true;
+        this.errorMessage =
+          "O Número deve ser estar entre 0 e 1000. Tente de novo!!!";
+        setTimeout(() => {
+          this.closeError();
+        }, 5000);
       } else if (this.sheep.color === "") {
-        alert("Uma Cor precisa ser definido. Tente de novo!!!");
+        this.errorSheep = true;
+        this.errorMessage = "Uma Cor precisa ser definida. Tente de novo!!!";
+        setTimeout(() => {
+          this.closeError();
+        }, 5000);
       } else {
         if (this.sheep.breed === "") {
           this.sheep.breed = "S.R.D.";
@@ -124,6 +150,10 @@ export default {
       this.sheep.breed = "";
       this.sheep.color = "";
       this.sheep.sex = "M";
+    },
+    closeError() {
+      this.errorSheep = false;
+      this.errorMessage = "";
     },
   },
 };
