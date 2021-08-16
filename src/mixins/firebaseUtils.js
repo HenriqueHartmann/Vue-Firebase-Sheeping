@@ -12,11 +12,18 @@ export default {
       errorAuth: false,
       alreadyExists: true,
       loadingAuth: false,
+      sheeps: [],
     };
   },
   methods: {
+    // Account
+
     changeState(value) {
       this.$emit("changeState", value);
+    },
+
+    getUID() {
+      return fb.auth.currentUser.uid;
     },
 
     async authentication() {
@@ -59,6 +66,12 @@ export default {
       this.loadingAuth = false;
     },
 
+    signOut() {
+      fb.auth.signOut();
+    },
+
+    // PROFILE
+
     async addProfile(profile) {
       await fb.db.collection("profile").add(profile);
     },
@@ -85,8 +98,40 @@ export default {
         });
     },
 
-    signOut() {
-      fb.auth.signOut();
+    // SHEEP
+
+    async addSheep(sheep) {
+      await fb.db.collection("sheep").add(sheep);
+    },
+
+    async getSheeps() {
+      this.sheeps = [];
+      let uid = this.getUID();
+
+      const logSheeps = await fb.db
+        .collection("sheep")
+        .where("uid", "==", uid)
+        .get();
+
+      for (let doc of logSheeps.docs) {
+        this.sheeps.push({
+          id: doc.id,
+          number: doc.data().number,
+          breed: doc.data().breed,
+          color: doc.data().color,
+          sex: doc.data().sex,
+        });
+      }
+    },
+
+    async delSheep(id) {
+      await fb.db
+        .collection("sheep")
+        .doc(id)
+        .delete()
+        .then(() => {
+          this.getSheeps();
+        });
     },
   },
 };

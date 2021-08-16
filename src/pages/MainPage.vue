@@ -6,10 +6,10 @@
     </div>
     <section id="flexSection" class="d-flex justify-content-evenly mt-5">
       <div id="leftPart" class="item">
-        <sheep-form :sheeps="sheeps" />
+        <sheep-form @updateList="updateSheepList()" />
       </div>
       <div id="right-part" class="item">
-        <sheep-list :sheeps="sheeps" />
+        <sheep-list ref="sheepList" />
       </div>
     </section>
   </div>
@@ -21,7 +21,6 @@ import SheepList from "@/components/SheepList.vue";
 
 export default {
   name: "MainPage",
-  mixins: [],
   components: {
     SheepForm,
     SheepList,
@@ -29,8 +28,12 @@ export default {
   data() {
     return {
       title: "Adicionar Ovelhas",
-      sheeps: [],
     };
+  },
+  methods: {
+    updateSheepList() {
+      this.$refs.sheepList.getSheeps();
+    },
   },
 };
 </script>
