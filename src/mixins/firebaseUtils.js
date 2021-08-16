@@ -13,6 +13,7 @@ export default {
       alreadyExists: true,
       loadingAuth: false,
       sheeps: [],
+      sheepExistVar: false,
     };
   },
   methods: {
@@ -127,6 +128,21 @@ export default {
           color: doc.data().color,
           sex: doc.data().sex,
         });
+      }
+    },
+
+    async sheepExist(number) {
+      let uid = this.getUID();
+
+      const logSheeps = await fb.db
+        .collection("sheep")
+        .where("uid", "==", uid)
+        .get();
+
+      for (let doc of logSheeps.docs) {
+        if (parseInt(doc.data().number) == number) {
+          this.sheepExistVar = true;
+        }
       }
     },
 

@@ -123,33 +123,46 @@ export default {
   },
   methods: {
     createSheep() {
-      if (this.sheep.number < 1 || this.sheep.number > 999) {
-        this.errorSheep = true;
-        this.errorMessage =
-          "O Número deve ser estar entre 0 e 1000. Tente de novo!!!";
-        setTimeout(() => {
-          this.closeError();
-        }, 5000);
-      } else if (this.sheep.color === "") {
-        this.errorSheep = true;
-        this.errorMessage = "Uma Cor precisa ser definida. Tente de novo!!!";
-        setTimeout(() => {
-          this.closeError();
-        }, 5000);
-      } else {
-        if (this.sheep.breed === "") {
-          this.sheep.breed = "S.R.D.";
+      this.sheepExist(this.sheep.number).then(() => {
+        if (this.sheep.number < 1 || this.sheep.number > 999) {
+          // Erro de intervalo
+          this.errorSheep = true;
+          this.errorMessage =
+            "O Número deve ser estar entre 0 e 1000. Tente de novo!!!";
+          setTimeout(() => {
+            this.closeError();
+          }, 5000);
+        } else if (this.sheepExistVar) {
+          // Erro de número já existente
+          this.errorSheep = true;
+          this.errorMessage = "O Número informado já existe. Tente de novo!!!";
+          setTimeout(() => {
+            this.closeError();
+          }, 5000);
+        } else if (this.sheep.color === "") {
+          // Erro de cor não selecionada
+          this.errorSheep = true;
+          this.errorMessage = "Uma Cor precisa ser definida. Tente de novo!!!";
+          setTimeout(() => {
+            this.closeError();
+          }, 5000);
+        } else {
+          // Sem erros
+          if (this.sheep.breed === "") {
+            this.sheep.breed = "S.R.D.";
+          }
+
+          this.sheep.uid = this.getUID();
+          this.addSheep(this.sheep);
+          this.$emit("updateList");
         }
 
-        this.sheep.uid = this.getUID();
-        this.addSheep(this.sheep);
-        this.$emit("updateList");
-      }
-
-      this.sheep.number = "";
-      this.sheep.breed = "";
-      this.sheep.color = "";
-      this.sheep.sex = "M";
+        this.sheep.number = "";
+        this.sheep.breed = "";
+        this.sheep.color = "";
+        this.sheep.sex = "M";
+        this.sheepExistVar = false;
+      });
     },
     closeError() {
       this.errorSheep = false;
